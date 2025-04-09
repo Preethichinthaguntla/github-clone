@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const yargs = require("yargs");
 const { hideBin } = require("yargs/helpers");
 
@@ -7,7 +9,6 @@ const { commitRepo } = require("./controllers/commit");
 const { pushRepo } = require("./controllers/push");
 const { pullRepo } = require("./controllers/pull");
 const { revertRepo } = require("./controllers/revert");
-
 
 
 yargs(hideBin(process.argv))
@@ -21,7 +22,9 @@ yargs(hideBin(process.argv))
                 type: "string",
             });
         }, 
-        addRepo
+        (argv) => {
+            addRepo(argv.file);
+        }
     )
     .command(
         "commit <message>", 
@@ -32,7 +35,9 @@ yargs(hideBin(process.argv))
                 type: "string",
             });
         }, 
-        commitRepo
+        (argv) => {
+            commitRepo(argv.message);
+        }
     )
     .command("push", "Push commits to S3",{}, pushRepo)
     .command("pull", "Pull commits to S3",{}, pullRepo)
@@ -45,7 +50,10 @@ yargs(hideBin(process.argv))
                 type: "string",
             });
         }, 
-        revertRepo
+        (argv) => {
+            revertRepo(argv.commitID);
+        }
     )
     .demandCommand(1, "You need at least one command")
     .help().argv;
+
