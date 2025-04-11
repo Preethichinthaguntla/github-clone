@@ -28,9 +28,19 @@ async function signup(req, res) {
         const db = client.db("githubclone");
         const usersCollection = db.collection("users");
 
-        const user = await usersCollection.findOne({username});
-        if(user) {
-            return res.status(400).json({message:"User already exists!"}); 
+        const existingUser = await usersCollection.findOne({
+            $or: [
+                {username},
+                {email}
+            ]
+        });
+        if(existingUser) {
+            if(existingUser.username === username) {
+                return res.status(400).json({message:"Username already exists!"});
+            }
+            if(existingUser.email === email) {
+                return res.status(400).json({message:"Email already exists!"});
+            }
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -48,7 +58,8 @@ async function signup(req, res) {
         const result = await usersCollection.insertOne(newUser);
 
         const token = jwt.sign({ id: result.insertedId }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
-
+        res.json({token, userId: result.insertedId});
+        
     } catch (err) {
         console.error("Error during signup :", err.message);
         res.status(500).send("Server error");
@@ -168,7 +179,7 @@ async function deleteUserProfile (req, res) {
             return res.status(404).json({ message: "User not found!" });
         }
 
-        res.json({message: "User profile deleted:"})
+        res.json({message: "User profile deleted!"})
 
     } catch (err) {
         console.error("Error during deleting:", err.message);
