@@ -72,7 +72,7 @@ yargs(hideBin(process.argv))
 
 function startServer() {
     const app = express();
-    const port = process.env.PORT || 3001;
+    const port = process.env.PORT || 3002;
     
     app.use(bodyParser.json());
     app.use(express.json());

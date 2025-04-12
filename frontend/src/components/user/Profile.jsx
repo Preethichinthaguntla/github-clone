@@ -12,7 +12,7 @@ const Profile = () => {
   const [userDetails, setUserDetails] = useState({ username: "username" });
   const { setCurrentUser } = useAuth();
 
-  
+
   useEffect(() => {
     const fetchUserDetails = async () => {
       const userId = localStorage.getItem("userId");
