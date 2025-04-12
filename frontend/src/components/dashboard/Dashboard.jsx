@@ -3,21 +3,6 @@ import "./dashboard.css";
 import { Link } from "react-router-dom";
 import { Box, Button } from "@primer/react";
 
-const Navbar = () => (
-  <Box display="flex" alignItems="center" padding={2} bg="canvas.default">
-    <Box marginRight={3}>
-      <Link to="/">
-        <Button variant="invisible">Home</Button>
-      </Link>
-    </Box>
-    <Box marginRight={3}>
-      <Link to="/dashboard">
-        <Button variant="invisible">Dashboard</Button>
-      </Link>
-    </Box>
-  </Box>
-);
-
 const Dashboard = () => {
   const [repositories, setRepositories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,8 +14,8 @@ const Dashboard = () => {
 
     const fetchRepositories = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3002/repo/user/${userId}`
+          const response = await fetch(
+            `http://localhost:3002/repo/user/${userId}`
         );
         const data = await response.json();
         setRepositories(data.repositories);
@@ -66,9 +51,7 @@ const Dashboard = () => {
   }, [searchQuery, repositories]);
 
   return (
-    <>
-      <Navbar />
-      <section id="dashboard">
+    <section id="dashboard">
         <aside>
           <h3>Suggested Repositories</h3>
           {suggestedRepositories.map((repo) => {
@@ -114,7 +97,6 @@ const Dashboard = () => {
           </ul>
         </aside>
       </section>
-    </>
   );
 };
 
